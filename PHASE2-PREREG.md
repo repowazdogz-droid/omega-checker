@@ -34,3 +34,8 @@ Falsifiers of the framing: a mutation that lowers instructions but raises RSS
 past the bound (the runner kills at ~15 GB); a mutation whose gain does not
 reproduce on the second measurement.
 Not claimed under any outcome: soundness; Arena x86 numbers; cedar/cslib.
+
+## Log
+- M1 ceaabb5 (upstream master, no wide port): 897.0 G, RSS 7.79 GB. DISCARD: no
+  instruction gain vs base 895 G (RSS drop of 0.8 GB noted; not a keep criterion).
+- M2 801cb6d equal-hint: 910.5 G vs candidate 912 G. DISCARD: within noise, as predicted.
