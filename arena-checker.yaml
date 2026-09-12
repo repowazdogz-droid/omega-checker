@@ -6,7 +6,7 @@ description: |
   Apache-2.0.
 url: REPLACE-WITH-PUBLIC-REPO-URL
 ref: omega
-rev: REPLACE-WITH-CANDIDATE-COMMIT
+rev: f6299d79a05c7390d2322161581e851a281cf48a
 build: |
   cat > config.json <<__END__
    {
