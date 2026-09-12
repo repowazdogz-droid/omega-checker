@@ -49,7 +49,7 @@ equal to the Arena's where the Arena publishes them):
 | std | 551,674,936 = yes | accept (93,046) | not run | accept, 1.2 GB, 88 G |
 | perf/magma-string-n4 | 17,248,623 | accept | not run | accept |
 | perf/magma-string-pair-n9 | 17,250,845 | accept | not run | accept |
-| mathlib | 5,636,308,621 / 100,001,405 lines = yes | (see below) | accept | accept |
+| mathlib | 5,636,308,621 / 100,001,405 lines = yes | accept (670,627 decls) | accept | accept |
 
 Not run locally: cedar (791 MB) and cslib (2.0 GB) — they need full builds of cedar-spec and
 cslib and disk was at 10–16 GB free. The Arena shows sokonanoda `7b51784` accepting both; the
@@ -71,7 +71,7 @@ comparable only to each other, not to the Arena's x86 numbers. Run-to-run noise 
 | + wide frames as ported (`d181d7b`) | 934 G | +4.3% | 8.6 GB | 35.5 s |
 | + `key_env` cold path outlined (`f6299d7`, candidate) | 912 G | +1.9% | 8.6 GB | 35.2 s |
 | mathgraph `d6a7327` (Arena leader) | 970 G | +8.4% | 8.6 GB | 36.8 s |
-| official v4.34.0-rc2 (1 thread) | pending | | | |
+| official v4.34.0-rc2 (1 thread) | 12,119 G | +1254% | 8.2 GB | 1983 s |
 
 What the +4.3% was and was not: it is not the wide path executing (with the path compiled in
 but never entered, Mathlib still costs 931 G), and it is not the 8-byte growth of `Env`
