@@ -39,3 +39,8 @@ Not claimed under any outcome: soundness; Arena x86 numbers; cedar/cslib.
 - M1 ceaabb5 (upstream master, no wide port): 897.0 G, RSS 7.79 GB. DISCARD: no
   instruction gain vs base 895 G (RSS drop of 0.8 GB noted; not a keep criterion).
 - M2 801cb6d equal-hint: 910.5 G vs candidate 912 G. DISCARD: within noise, as predicted.
+- M3 lazily allocated wide caches: 910.6 G vs 912 G; reduced export 20.2 G / 2.4 GB.
+  DISCARD: within noise. Prediction (<= 1.5% recoverable) NOT met.
+- STOP: three consecutive discards. Candidate remains f6299d7. The residual +1.9%
+  structural cost of the wide-frame port is NOT attributed (not the wide path
+  executing, not Env size, not lookup outlining, not cache capacity).

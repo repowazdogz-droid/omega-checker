@@ -82,7 +82,24 @@ set, so the recovery loop stopped there.
 
 Projection to the Arena (assumption: the ratio transfers from ARM to x86): sokonanoda's Arena
 count 791 G × 912/895 ≈ 806 G, against mathgraph's 834 G, a margin of about 3.4%. Under the
-brief's rule that is a thin margin (<5%), so Phase 2 applies; it has not been started.
+brief's rule that is a thin margin (<5%), so Phase 2 was run under the frozen rule in
+`PHASE2-PREREG.md`.
+
+## Phase 2 (closed by its stop rule)
+
+Keep rule: gate clean with extras, and Mathlib instructions at or below 0.99× the candidate on
+two runs. Three mutations, three discards, then the stop rule fired:
+
+| mutation | Mathlib | verdict |
+|---|---|---|
+| M1 upstream sokonanoda `ceaabb5` (no wide port) | 897 G, RSS 7.8 GB | discard: no instruction gain over base; 0.8 GB less RSS noted |
+| M2 mathgraph `801cb6d` equal-hint unfolding | 910.5 G | discard: within noise |
+| M3 lazily allocated wide caches | 910.6 G | discard: within noise |
+
+The candidate is unchanged at `f6299d7`. The residual +1.9% over the base remains
+unattributed. Build-recipe parity needs no work: the fork already has mimalloc and fat LTO,
+and the Arena YAML applies the same PGO + `target-cpu=native` recipe as the sokonanoda and
+mathgraph entries.
 
 Peak RSS on con-leche is 6.3 GB, and on Mathlib 8.6 GB locally (the Arena measured 7.2 GB for
 the base build on its allocator; the fix does not change Mathlib RSS here).
