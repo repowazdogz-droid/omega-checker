@@ -451,20 +451,28 @@ impl<'x, 't, 'p> TypeChecker<'x, 't, 'p> {
             return self.lsub_base(env.lsub());
         }
         if k > 64 {
-            let ck = (env as *const value::Env<'t> as usize, e);
-            if let Some(r) = self.tc_cache.wide_prune_cache.get(&ck) {
-                return *r;
-            }
-            let Some(words) = self.exact_wide_uses(e) else {
-                WIDE_SKIPS.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
-                WIDE_MAX_K.fetch_max(u64::from(k), std::sync::atomic::Ordering::Relaxed);
-                return env;
-            };
-            let r = self.prune_env_wide(env, &words);
-            self.tc_cache.wide_prune_cache.insert(ck, r);
-            return r;
+            return self.key_env_wide(env, e, k);
         }
         self.prune_env(env, e.as_ref().fv_mask())
+    }
+
+    /// The over-64-loose-variables case of `key_env`, kept out of line so the
+    /// common path stays small enough to inline.
+    #[cold]
+    #[inline(never)]
+    fn key_env_wide(&mut self, env: E<'t>, e: ExprPtr<'t>, k: u16) -> E<'t> {
+        let ck = (env as *const value::Env<'t> as usize, e);
+        if let Some(r) = self.tc_cache.wide_prune_cache.get(&ck) {
+            return *r;
+        }
+        let Some(words) = self.exact_wide_uses(e) else {
+            WIDE_SKIPS.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+            WIDE_MAX_K.fetch_max(u64::from(k), std::sync::atomic::Ordering::Relaxed);
+            return env;
+        };
+        let r = self.prune_env_wide(env, &words);
+        self.tc_cache.wide_prune_cache.insert(ck, r);
+        r
     }
 
     #[inline]
