@@ -10,6 +10,18 @@ const SESSION_BUDGET: usize = 2_621_440;
 
 const CHUNK_SIZE: usize = 64;
 
+/// `SOKO_TRACE=<ms>` prints every declaration whose check took at least <ms>
+/// milliseconds (default threshold 100 ms when set to any non-numeric value).
+fn trace_enabled() -> bool {
+    static ON: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+    *ON.get_or_init(|| std::env::var_os("SOKO_TRACE").is_some())
+}
+
+fn trace_threshold_ms() -> u128 {
+    static T: std::sync::OnceLock<u128> = std::sync::OnceLock::new();
+    *T.get_or_init(|| std::env::var("SOKO_TRACE").ok().and_then(|v| v.parse().ok()).unwrap_or(100))
+}
+
 /// An enum for type safety and convenience; used during nat literal reduction, and also for testing.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum NatBinOp {
@@ -152,7 +164,33 @@ impl<'p> ExportFile<'p> {
                 while i < end {
                     let (_, d) = self.declars.get_index(i).expect("declaration index out of range");
                     i += 1;
-                    self.check_declar_with(tctx, cache, sbump.get(), d);
+                    let trace_t0 = if trace_enabled() { Some(std::time::Instant::now()) } else { None };
+                    let alloc0 = sbump.allocated_bytes();
+                    // Any panic while checking `d` is a rejection; name the declaration
+                    // before the panic continues so a reject is never silent.
+                    if let Err(payload) = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                        self.check_declar_with(tctx, cache, sbump.get(), d)
+                    })) {
+                        eprintln!(
+                            "rejected while checking declaration #{} `{:?}`",
+                            i - 1,
+                            tctx.debug_print(d.info().name)
+                        );
+                        std::panic::resume_unwind(payload);
+                    }
+                    if let Some(t0) = trace_t0 {
+                        let dt = t0.elapsed();
+                        if dt.as_millis() >= trace_threshold_ms() {
+                            eprintln!(
+                                "trace: #{} `{:?}` {:.3}s session_alloc={}MB (+{}MB)",
+                                i - 1,
+                                tctx.debug_print(d.info().name),
+                                dt.as_secs_f64(),
+                                sbump.allocated_bytes() / (1 << 20),
+                                sbump.allocated_bytes().saturating_sub(alloc0) / (1 << 20)
+                            );
+                        }
+                    }
                     if sbump.allocated_bytes() > SESSION_BUDGET {
                         pending = Some((i, end));
                         return false
@@ -222,6 +260,14 @@ impl<'p> ExportFile<'p> {
             self.check_all_declars_par(self.config.num_threads)
         } else {
             self.check_all_declars_serial()
+        }
+        if trace_enabled() {
+            use std::sync::atomic::Ordering::Relaxed;
+            eprintln!(
+                "trace: key_env skipped pruning {} times (max loose bvars {})",
+                crate::eval::WIDE_SKIPS.load(Relaxed),
+                crate::eval::WIDE_MAX_K.load(Relaxed)
+            );
         }
     }
 }

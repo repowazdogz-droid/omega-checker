@@ -47,6 +47,11 @@ enum ForceStep<'a> {
     Done,
 }
 
+/// Diagnostic counters (read by the SOKO_TRACE report): how often `key_env`
+/// gave up on pruning because the body had more than 64 loose variables.
+pub static WIDE_SKIPS: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+pub static WIDE_MAX_K: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+
 impl<'x, 't, 'p> TypeChecker<'x, 't, 'p> {
     #[inline]
     pub(crate) fn mk_bvar_hc(&mut self, level: u32, ty: V<'t>) -> V<'t> {
@@ -252,6 +257,8 @@ impl<'x, 't, 'p> TypeChecker<'x, 't, 'p> {
             return self.lsub_base(env.lsub());
         }
         if k > 64 {
+            WIDE_SKIPS.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+            WIDE_MAX_K.fetch_max(u64::from(k), std::sync::atomic::Ordering::Relaxed);
             return env;
         }
         self.prune_env(env, e.as_ref().fv_mask())
