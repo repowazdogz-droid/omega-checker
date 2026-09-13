@@ -5,14 +5,14 @@ description: |
   and a rejection path that always names the failing declaration.
   Apache-2.0. See NOTICE.md and RELEASE_MANIFEST.md.
 # Pre-publish URL strategy (repository not yet on GitHub):
-#   1. Push branch `omega` to https://github.com/wazdogz/omega-checker
+#   1. Push branch `omega` to https://github.com/repowazdogz-droid/omega-checker
 #      (or the chosen public owner/name documented in RELEASE_MANIFEST.md).
 #   2. Replace `url` below with that repository URL before Arena submission.
 #   3. Set `rev` to `release_commit` in RELEASE_MANIFEST.md (semantic checker
 #      unchanged since f6299d7; later commits are packaging/evidence only).
 # Until published, local Arena runs may use `dir: ../omega-checker` from the
 # arena checkout instead of cloning `url`.
-url: https://github.com/wazdogz/omega-checker
+url: https://github.com/repowazdogz-droid/omega-checker
 ref: omega
 rev: 1a237eee4d3201d899ff0fc086b39f77b89fe6eb
 build: |

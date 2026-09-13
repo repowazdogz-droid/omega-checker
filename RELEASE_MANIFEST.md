@@ -12,7 +12,7 @@
 
 ## Repository URL (pre-publish)
 
-Intended public fork: `https://github.com/wazdogz/omega-checker` (branch `omega`).
+Intended public fork: `https://github.com/repowazdogz-droid/omega-checker` (branch `omega`).
 
 Before Arena submission:
 
