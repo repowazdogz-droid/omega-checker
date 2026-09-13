@@ -7,7 +7,7 @@
 | Role | SHA | Notes |
 |---|---|---|
 | **semantic_candidate** | `f6299d79a05c7390d2322161581e851a281cf48a` | Checker semantics frozen here (`phase1-candidate` tag) |
-| **release_commit** | `cc66ca20ee9427646eb4b960de4186edcc65444a` | Full release bundle (evidence + manifest + bound rev); no `src/` changes after semantic candidate |
+| **release_commit** | `5b2113cbab32754ce01f42d33ae5abc7dc175a85` | Full release bundle (evidence + manifest); no `src/` changes after semantic candidate |
 | evidence_bundle | `7ed4ff48dd92a96718056af47f671a8e3dde1bde` | First packaging commit (subset of release_commit) |
 
 ## Repository URL (pre-publish)

@@ -14,7 +14,7 @@ description: |
 # arena checkout instead of cloning `url`.
 url: https://github.com/wazdogz/omega-checker
 ref: omega
-rev: cc66ca20ee9427646eb4b960de4186edcc65444a
+rev: 5b2113cbab32754ce01f42d33ae5abc7dc175a85
 build: |
   cat > config.json <<__END__
    {
