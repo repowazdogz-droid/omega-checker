@@ -1,0 +1,5 @@
+uncaught exception: while replaying declaration 'funEtaBad':
+(kernel) declaration type mismatch, 'funEtaBad' has type
+  (x x_1 : Type) → (x → x) → (f : x → x_1) → @Eq (x → x_1) f f
+but it is expected to have type
+  (α β : Type) → (g : α → α) → (f : α → β) → @Eq (α → β) (fun x => f (g x)) f

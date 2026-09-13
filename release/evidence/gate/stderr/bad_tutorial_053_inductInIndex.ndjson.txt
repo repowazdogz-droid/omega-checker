@@ -1,0 +1,7 @@
+
+thread 'thread_0' (1919652) panicked at src/inductive.rs:1136:9:
+assertion failed: self.is_valid_ind_app_v(st, parent_ind_name, depth, cur)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'main' (1919627) panicked at src/tc.rs:213:26:
+A thread in `check_all_declars` panicked while being joined: Any { .. }

@@ -1,0 +1,5 @@
+uncaught exception: while replaying declaration 'down':
+(kernel) declaration type mismatch, 'down' has type
+  Type (imax u v) → Type (imax u v)
+but it is expected to have type
+  Type (imax u v) → Sort (imax u v)

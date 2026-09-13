@@ -1,0 +1,5 @@
+uncaught exception: while replaying declaration 'indexedUnitEta':
+(kernel) declaration type mismatch, 'indexedUnitEta' has type
+  (x : IndexedUnit Bool.true) → IndexedUnit Bool.true → @Eq (IndexedUnit Bool.true) x x
+but it is expected to have type
+  (x y : IndexedUnit Bool.true) → @Eq (IndexedUnit Bool.true) x y

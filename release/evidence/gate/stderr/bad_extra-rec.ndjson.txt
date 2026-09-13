@@ -1,0 +1,9 @@
+
+thread 'thread_0' (1918629) panicked at src/inductive.rs:405:9:
+assertion `left == right` failed: imported inductive block contains an underived recursor
+  left: {NamePtr(0x5ebfd6c03d8), NamePtr(0x5ebfd6c0360)}
+ right: {NamePtr(0x5ebfd6c0360)}
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'main' (1918618) panicked at src/tc.rs:213:26:
+A thread in `check_all_declars` panicked while being joined: Any { .. }

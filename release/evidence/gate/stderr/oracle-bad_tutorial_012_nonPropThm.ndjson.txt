@@ -1,0 +1,3 @@
+uncaught exception: while replaying declaration 'nonPropThm':
+(kernel) type of theorem 'nonPropThm' is not a proposition
+  Prop

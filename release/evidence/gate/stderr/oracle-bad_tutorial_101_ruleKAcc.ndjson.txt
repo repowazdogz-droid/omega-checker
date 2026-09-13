@@ -1,0 +1,7 @@
+uncaught exception: while replaying declaration 'ruleKAcc':
+(kernel) declaration type mismatch, 'ruleKAcc' has type
+  (α : Sort u) → (p : α → α → Prop) → (x : α) → @Acc α p x → (a : Bool) → @Eq Bool a a
+but it is expected to have type
+  (α : Sort u) →
+    (p : α → α → Prop) →
+      (x : α) → (h : @Acc α p x) → (a : Bool) → @Eq Bool (@Acc.rec α p (fun x x_1 => Bool) (fun x x_1 x_2 => a) x h) a

@@ -1,0 +1,2 @@
+uncaught exception: while replaying declaration 'dup_rec_def2':
+(kernel) constant has already been declared 'dup_rec_def2.rec'

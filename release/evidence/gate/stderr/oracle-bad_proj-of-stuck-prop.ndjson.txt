@@ -1,0 +1,7 @@
+uncaught exception: while replaying declaration 'Native64ResultSortOwner':
+(kernel) type expected
+  @Native64ResultSortGate.rec x (fun index index_1 index_2 index_3 proof => Type) Prop
+    (Native64SortGateB.0.3766726852 ((@fun salt => x) 125330))
+    (Native64SortGateA.1.2023879994 ((@fun salt => x) 125330))
+    (Native64SortGateA.1.2023879994 ((@fun salt => x) 125330))
+    (Native64SortGateA.1.2023879994 ((@fun salt => x) 125330)) h

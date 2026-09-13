@@ -1,0 +1,5 @@
+uncaught exception: while replaying declaration '_private.Test.0.h':
+(kernel) declaration type mismatch, '_private.Test.0.h' has type
+  @Eq _private.Test.0.S (_private.Test.0.S.mk Bool.true) (_private.Test.0.S.mk Bool.true)
+but it is expected to have type
+  @Eq _private.Test.0.S (_private.Test.0.S.mk Bool.true) (_private.Test.0.S.mk Bool.false)

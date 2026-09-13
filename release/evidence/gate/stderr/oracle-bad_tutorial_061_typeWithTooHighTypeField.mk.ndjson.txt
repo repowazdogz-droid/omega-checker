@@ -1,0 +1,2 @@
+uncaught exception: while replaying declaration 'typeWithTooHighTypeField':
+(kernel) universe level of type_of(arg #1) of 'typeWithTooHighTypeField.mk' is too big for the corresponding inductive datatype

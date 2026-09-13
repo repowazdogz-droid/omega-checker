@@ -1,0 +1,2 @@
+uncaught exception: while replaying declaration '_test':
+(kernel) let-declaration type mismatch 'x'

@@ -1,35 +1,47 @@
-# REPORT — Phase 1 (con-leche) — 2026-09-12
+# REPORT — omega-checker release — 2026-09-13
 
-Candidate submission: commit `f6299d79a05c7390d2322161581e851a281cf48a` on branch `omega`
-(tag `phase1-candidate`), a fork of intgrah/sokonanoda at the Arena revision `7b51784`.
-Build: `cargo build --release` (the Arena YAML in `arena-checker.yaml` uses the same
-PGO + `target-cpu=native` recipe as the sokonanoda and mathgraph entries).
+Semantic candidate: commit `f6299d79a05c7390d2322161581e851a281cf48a` on branch
+`omega` (tag `phase1-candidate`), forked from intgrah/sokonanoda at Arena
+revision `7b51784`.
+
+Release packaging (evidence, NOTICE, manifest) may add commits after `f6299d7`
+without changing checker semantics. See `RELEASE_MANIFEST.md`.
+
+Build: `cargo build --release` locally; the Arena YAML in `arena-checker.yaml`
+uses the PGO + `target-cpu=native` recipe shared with sokonanoda and mathgraph
+entries.
+
+Attribution: see `NOTICE.md` for sokonanoda, nanoda lineage, and mathgraph wide-frame port authorship.
 
 ## Root cause of the con-leche "reject"
 
-The Arena recorded sokonanoda `7b51784` as *rejecting* the con-leche export (rev `86cd20a`)
-with exit 1 and empty stderr. That result is not a kernel verdict. Locally the unmodified
-checker **accepts** the byte-identical export (exit 0) with a 27.4 GB peak RSS; on the Arena
-runner every checker that reaches roughly 15.2 GB RSS dies at that point (kiota on cedar:
-exit 137; sokonanoda and zignodamus on con-leche: exit 1, empty stderr, because their run
-lines end in `|| exit 1`, which masks the signal). The memory comes from one declaration:
-`ConLeche.checkIotaThmN_inv` allocates about 32 GB in a single check session, because
-`key_env` in `eval.rs` returned the environment *unpruned* whenever a closure body had more
-than 64 loose bound variables (`if k > 64 { return env }`). That theorem hits the cutoff
-191,336,199 times (max 160 loose variables); ordinary tests hit it zero times. Unpruned
-environments defeat closure and frame sharing, so the bump arena (reset only between
-declarations) grows without bound. The fix is exact pruning past 64 variables via "wide
-framed" environments, ported commit-by-commit with original authorship (Heath Sanchez,
-Metalogic Labs, Apache-2.0) from mathgraph, plus one local change that keeps `key_env`
-small enough to inline. Nothing in the kernel checks was disabled, loosened or special-cased;
-export metadata is not trusted anywhere new.
+The Arena recorded sokonanoda `7b51784` as *rejecting* the con-leche export (rev
+`86cd20a`) with exit 1 and empty stderr. That result is not a kernel verdict.
+Locally the unmodified checker **accepts** the byte-identical export (exit 0)
+with a 27.4 GB peak RSS; on the Arena runner every checker that reaches roughly
+15.2 GB RSS dies at that point (kiota on cedar: exit 137; sokonanoda and
+zignodamus on con-leche: exit 1, empty stderr, because their run lines end in
+`|| exit 1`, which masks the signal). The memory comes from one declaration:
+`ConLeche.checkIotaThmN_inv` allocates about 32 GB in a single check session,
+because `key_env` in `eval.rs` returned the environment *unpruned* whenever a
+closure body had more than 64 loose bound variables (`if k > 64 { return env }`).
+That theorem hits the cutoff 191,336,199 times (max 160 loose variables);
+ordinary tests hit it zero times. Unpruned environments defeat closure and frame
+sharing, so the bump arena (reset only between declarations) grows without bound.
+The fix is exact pruning past 64 variables via "wide framed" environments,
+ported commit-by-commit with original authorship from mathgraph, plus one local
+change that keeps `key_env` small enough to inline. Nothing in the kernel
+checks was disabled, loosened or special-cased; export metadata is not trusted
+anywhere new.
 
-The runner kill line is inferred from the Arena's own results table, not observed directly.
-The reproduction here is: same bytes, accept locally, 27 GB peak, above that line.
+The runner kill line is inferred from the Arena's own results table, not
+observed directly on the runner (**PROJECTED Arena / unobserved locally**). The
+reproduction here is: same bytes, accept locally, 27 GB peak, above that line.
 
 ## Verdicts vs the official kernel (v4.34.0-rc2), this machine
 
-Tarball `lean-arena-tests.tar.gz` (last-modified 2026-09-11 23:27 UTC): 119 good, 73 bad.
+Tarball `lean-arena-tests.tar.gz` (last-modified 2026-09-11 23:27 UTC): 119
+good, 73 bad. Frozen artifacts: `release/evidence/gate/`.
 
 | set | expected | official | baseline `7b51784` | candidate `f6299d7` |
 |---|---|---|---|---|
@@ -38,8 +50,8 @@ Tarball `lean-arena-tests.tar.gz` (last-modified 2026-09-11 23:27 UTC): 119 good
 | good/corner-cases (unscored) | either | 1 accept | 1 accept | 1 accept |
 | declines / errors | 0 | 0 | 0 | 0 |
 
-Exports not in the tarball, regenerated with the Arena's own `lka.py build-test` (byte counts
-equal to the Arena's where the Arena publishes them):
+Exports not in the tarball, regenerated with the Arena's own `lka.py build-test`
+(byte counts equal to the Arena's where the Arena publishes them):
 
 | export | bytes (local = Arena) | official | baseline | candidate |
 |---|---|---|---|---|
@@ -51,80 +63,104 @@ equal to the Arena's where the Arena publishes them):
 | perf/magma-string-pair-n9 | 17,250,845 | accept | not run | accept |
 | mathlib | 5,636,308,621 / 100,001,405 lines = yes | accept (670,627 decls) | accept | accept |
 
-Not run locally: cedar (791 MB) and cslib (2.0 GB) — they need full builds of cedar-spec and
-cslib and disk was at 10–16 GB free. The Arena shows sokonanoda `7b51784` accepting both; the
-candidate has not been checked on them here.
+### cedar and cslib — unverified locally
 
-The candidate agrees with official v4.34.0-rc2 on all 192 tarball tests and on the six extra
-exports listed above. This is agreement on those inputs, not a soundness claim.
+**Not run locally:** cedar (791 MB export) and cslib (2.0 GB export). They
+require full builds of cedar-spec and cslib; disk was at 10–16 GB free during
+Phase 1. The Arena results table shows sokonanoda `7b51784` accepting both on
+the runner; the candidate has **not** been checked on cedar or cslib on this
+machine or on the Arena runner under this fork. Any performance or verdict
+claim for cedar/cslib is **unverified** until measured.
 
-## Mathlib cost (this machine: M4 Max, plain `cargo build --release`, 4 threads, runs alone)
+The candidate agrees with official v4.34.0-rc2 on all 192 tarball tests and on
+the six extra exports listed above. This is agreement on those inputs, not a
+soundness claim.
 
-Instruction counts are from macOS `/usr/bin/time -l` ("instructions retired", ARM). They are
-comparable only to each other, not to the Arena's x86 numbers. Run-to-run noise is about
-±0.5% (baseline: 900.2 / 895.3 / 895.1 G; wide build: 933.8 / 934.4 / 934.0 G).
+## Performance — OBSERVED ARM (this machine)
 
-| build | instructions | vs base | peak RSS | wall |
-|---|---|---|---|---|
-| sokonanoda `7b51784` (base) | 895 G | — | 8.6 GB | 37.5 s |
-| + instrumentation only (`843f439`) | 895 G | +0.0% | 8.6 GB | 34.9 s |
-| + wide frames as ported (`d181d7b`) | 934 G | +4.3% | 8.6 GB | 35.5 s |
-| + `key_env` cold path outlined (`f6299d7`, candidate) | 912 G | +1.9% | 8.6 GB | 35.2 s |
-| mathgraph `d6a7327` (Arena leader) | 970 G | +8.4% | 8.6 GB | 36.8 s |
-| official v4.34.0-rc2 (1 thread) | 12,119 G | +1254% | 8.2 GB | 1983 s |
+**Platform:** MacBook M4 Max, macOS, plain `cargo build --release`, 4 threads,
+runs alone.
 
-What the +4.3% was and was not: it is not the wide path executing (with the path compiled in
-but never entered, Mathlib still costs 931 G), and it is not the 8-byte growth of `Env`
-(boxing the wide payload back to 64 bytes: 933 G). Outlining the over-64 block out of the
-`#[inline] key_env` recovers half (912 G). Outlining the wide arm of `Env::lookup` recovers
-nothing (912 G). The remaining +1.9% is **not attributed**; it is inside the 2% line the brief
-set, so the recovery loop stopped there.
+**Method:** `/usr/bin/time -l` → `instructions retired` field. Raw stderr files
+in `release/evidence/measurements/`. Counts are comparable only to each other
+on this machine, **not** to Arena x86 numbers.
 
-Projection to the Arena (assumption: the ratio transfers from ARM to x86): sokonanoda's Arena
-count 791 G × 912/895 ≈ 806 G, against mathgraph's 834 G, a margin of about 3.4%. Under the
-brief's rule that is a thin margin (<5%), so Phase 2 was run under the frozen rule in
-`PHASE2-PREREG.md`.
+| build | instructions retired | peak RSS | source file |
+|---|---:|---:|---|
+| sokonanoda `7b51784` (base) | 900,157,551,455 (~900 G) | 8.6 GB | `sokonanoda-mathlib.stderr` |
+| omega-checker fork (Mathlib) | 933,795,598,537 (~934 G) | 8.6 GB | `omega-checker-mathlib.stderr` |
+| mathgraph `d6a7327` | 970,290,083,154 (~970 G) | 8.6 GB | `mathgraph-mathlib.stderr` |
+| official v4.34.0-rc2 (1 thread) | 12,118,869,062,178 (~12,119 G) | 8.2 GB | `official-mathlib.stderr` |
+
+**Removed claim:** A Mathlib total of 912 G for candidate commit `f6299d7` was
+previously reported in prose. **No raw stderr artifact supports that number.**
+It is not cited in this release. The only preserved omega-checker Mathlib ARM
+measurement is 933,795,598,537 instructions retired; the artifact does not
+record which git commit was built.
+
+Con-leche (OBSERVED ARM, preserved): omega-checker accepts rev 3e00480 at
+182,748,787,318 instructions retired and 6.3 GB peak RSS
+(`omega-checker-con-leche.stderr`).
+
+## Performance — PROJECTED x86 / Arena (not observed locally)
+
+The Arena runner measures x86 instruction counts with `perf`. Published Arena
+results (2026-09-11 snapshot) include, for Mathlib:
+
+| checker | Arena Mathlib instructions | source |
+|---|---:|---|
+| sokonanoda `7b51784` | ~791 G | Arena results table |
+| mathgraph `d6a7327` | ~834 G | Arena results table |
+
+These are **PROJECTED x86 / Arena** figures. They were **not** remeasured on
+this ARM machine. Do not treat ARM ratios above as transferring to Arena x86
+without a runner remeasurement.
+
+No Arena x86 Mathlib number exists yet for this omega-checker fork. Ranking
+relative to mathgraph on the Arena is **unverified** until the fork is built
+and run on the Arena runner.
 
 ## Phase 2 (closed by its stop rule)
 
-Keep rule: gate clean with extras, and Mathlib instructions at or below 0.99× the candidate on
-two runs. Three mutations, three discards, then the stop rule fired:
+Keep rule: gate clean with extras; Mathlib instructions at or below 0.99× prior
+candidate on two runs; RSS bounds. Three mutations, three discards, stop rule
+fired. Details in `PHASE2-PREREG.md`.
 
-| mutation | Mathlib | verdict |
-|---|---|---|
-| M1 upstream sokonanoda `ceaabb5` (no wide port) | 897 G, RSS 7.8 GB | discard: no instruction gain over base; 0.8 GB less RSS noted |
-| M2 mathgraph `801cb6d` equal-hint unfolding | 910.5 G | discard: within noise |
-| M3 lazily allocated wide caches | 910.6 G | discard: within noise |
+**Evidence note:** Phase 2 mutation Mathlib totals (897 G, 910.5 G, 910.6 G) were
+logged in prose only. No raw stderr artifacts for those runs are preserved.
+They are listed as **unverified** in `RELEASE_MANIFEST.md`.
 
-The candidate is unchanged at `f6299d7`. The residual +1.9% over the base remains
-unattributed. Build-recipe parity needs no work: the fork already has mimalloc and fat LTO,
-and the Arena YAML applies the same PGO + `target-cpu=native` recipe as the sokonanoda and
-mathgraph entries.
-
-Peak RSS on con-leche is 6.3 GB, and on Mathlib 8.6 GB locally (the Arena measured 7.2 GB for
-the base build on its allocator; the fix does not change Mathlib RSS here).
+The semantic candidate remains `f6299d7`. Build-recipe parity needs no work: the
+fork already has mimalloc and fat LTO, and the Arena YAML applies the same PGO +
+`target-cpu=native` recipe as the sokonanoda and mathgraph entries.
 
 ## What was done, in order
 
-1. Oracle: official checker built at v4.34.0-rc2 from the Arena repo; mathgraph built at its
-   Arena rev `d6a7327` (branch dulce-de-leche); nanoclo cloned as fallback (unused).
-2. `scripts/gate.sh`: runs all tarball tests through the candidate and the oracle, fails on any
-   mismatch, decline or error; oracle verdicts cached per tarball. Baseline run recorded with
-   stderr for every test in `~/lean-arena/gate-out-baseline/`.
-3. Instrumentation: every panic during a declaration check now prints the declaration index
-   and name (the original process had no message on this reject because there was no panic);
-   `SOKO_TRACE=<ms>` prints slow declarations and how often pruning was skipped.
-4. Trace on con-leche named `checkIotaThmN_inv` (88 s, 32 GB in one session). Reduced export of
-   that theorem and its cone (34 MB): base 354 G / 28 GB; mathgraph 21.5 G / 2.4 GB; official
-   36 G / 0.1 GB. Counter: 191 M skipped prunes, max 160 loose variables.
-5. Ported mathgraph's four wide-frame commits with `git am` (authorship preserved). Reduced
-   export: 20.7 G / 2.4 GB, 0 skipped prunes. Gate clean. Both con-leche revs accepted.
-6. Mathlib cost isolated by single-variable builds as tabulated above; candidate chosen.
+1. Oracle: official checker built at v4.34.0-rc2 from the Arena repo; mathgraph
+   built at its Arena rev `d6a7327` (branch dulce-de-leche); nanoclo cloned as
+   fallback (unused).
+2. `scripts/gate.sh`: runs all tarball tests through the candidate and the
+   oracle, fails on any mismatch, decline or error; oracle verdicts cached per
+   tarball. Release copy in `release/evidence/gate/`.
+3. Instrumentation: every panic during a declaration check now prints the
+   declaration index and name; `SOKO_TRACE=<ms>` prints slow declarations and
+   how often pruning was skipped.
+4. Trace on con-leche named `checkIotaThmN_inv` (88 s, 32 GB in one session).
+   Reduced export of that theorem and its cone (34 MB): base 354 G / 28 GB;
+   mathgraph 21.5 G / 2.4 GB; official 36 G / 0.1 GB. Counter: 191 M skipped
+   prunes, max 160 loose variables.
+5. Ported mathgraph's four wide-frame commits with `git am` (authorship
+   preserved). Reduced export: 20.7 G / 2.4 GB, 0 skipped prunes. Gate clean.
+   Both con-leche revs accepted.
+6. Mathlib cost measured on ARM; preserved stderr files listed above.
 
 ## Not claimed
 
-"Sound" is not claimed. The claim is: agrees with official v4.34.0-rc2 on all 186 scored
-tarball tests (and the 1 corner case, 6 extra exports) on this machine. Instruction counts are
-local ARM measurements; the Arena's ranking will come from its own x86 run. cedar and cslib
-are unverified locally. The kernel-kill explanation for the Arena result is inferred from the
-Arena's results table, not observed on the runner.
+"Sound" is not claimed. The claim is: agrees with official v4.34.0-rc2 on all
+186 scored tarball tests (and the 1 corner case, 6 extra exports) on this
+machine, with frozen artifacts under `release/evidence/gate/`.
+
+**Unverified:** cedar, cslib, Arena x86 Mathlib ranking, candidate-commit-linked
+Mathlib ARM total (912 G removed), Phase 2 mutation Mathlib totals without raw
+files. Kernel-kill explanation for the Arena con-leche result is inferred from
+the Arena's results table, not observed on the runner.

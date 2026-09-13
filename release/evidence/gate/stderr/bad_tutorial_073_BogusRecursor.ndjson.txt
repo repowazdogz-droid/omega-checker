@@ -1,0 +1,7 @@
+
+thread 'thread_2' (1919771) panicked at src/inductive.rs:1688:21:
+assertion failed: old_r.aux_data_ck(new_r)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'main' (1919750) panicked at src/tc.rs:213:26:
+A thread in `check_all_declars` panicked while being joined: Any { .. }

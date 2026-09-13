@@ -1,0 +1,5 @@
+uncaught exception: while replaying declaration 'bad':
+(kernel) declaration type mismatch, 'bad' has type
+  @Eq T t1 t1
+but it is expected to have type
+  @Eq T t1 t2

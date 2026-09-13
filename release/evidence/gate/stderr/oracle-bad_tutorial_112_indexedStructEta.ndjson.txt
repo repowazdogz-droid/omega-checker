@@ -1,0 +1,5 @@
+uncaught exception: while replaying declaration 'indexedStructEta':
+(kernel) declaration type mismatch, 'indexedStructEta' has type
+  (x : IndexedSingleton Bool.true) → @Eq (IndexedSingleton Bool.true) x x
+but it is expected to have type
+  (x : IndexedSingleton Bool.true) → @Eq (IndexedSingleton Bool.true) (IndexedSingleton.mk True.intro) x

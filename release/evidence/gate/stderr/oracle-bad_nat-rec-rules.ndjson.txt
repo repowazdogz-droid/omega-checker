@@ -1,0 +1,10 @@
+uncaught exception: while replaying declaration 'proof_of_false':
+(kernel) application type mismatch
+  @Nat.rec (fun n => @Bool.rec (fun x => Prop) False True (Nat.beq n 0)) True.intro fun n ih => True.intro
+argument has type
+  (n : Nat) → (@fun n => @Bool.rec (fun x => Prop) False True (Nat.beq n 0)) n → True
+but function has type
+  ((n : Nat) →
+      (@fun n => @Bool.rec (fun x => Prop) False True (Nat.beq n 0)) n →
+        (@fun n => @Bool.rec (fun x => Prop) False True (Nat.beq n 0)) (Nat.succ n)) →
+    (t : Nat) → (@fun n => @Bool.rec (fun x => Prop) False True (Nat.beq n 0)) t

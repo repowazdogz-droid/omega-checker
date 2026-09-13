@@ -1,0 +1,5 @@
+uncaught exception: while replaying declaration 'thm':
+(kernel) declaration type mismatch, 'thm' has type
+  True
+but it is expected to have type
+  @Eq Nat 0 1

@@ -1,0 +1,7 @@
+
+thread 'thread_1' (1919588) panicked at src/inductive.rs:178:17:
+inductive occurrence is not applied uniformly to the block parameters and universe levels
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'main' (1919569) panicked at src/tc.rs:213:26:
+A thread in `check_all_declars` panicked while being joined: Any { .. }

@@ -3,10 +3,18 @@ description: |
   exact environment pruning past 64 loose variables (ported, with authorship
   preserved, from [mathgraph](https://github.com/metalogiclabs/mathgraph-lean-kernel)),
   and a rejection path that always names the failing declaration.
-  Apache-2.0.
-url: REPLACE-WITH-PUBLIC-REPO-URL
+  Apache-2.0. See NOTICE.md and RELEASE_MANIFEST.md.
+# Pre-publish URL strategy (repository not yet on GitHub):
+#   1. Push branch `omega` to https://github.com/wazdogz/omega-checker
+#      (or the chosen public owner/name documented in RELEASE_MANIFEST.md).
+#   2. Replace `url` below with that repository URL before Arena submission.
+#   3. Set `rev` to `release_commit` in RELEASE_MANIFEST.md (semantic checker
+#      unchanged since f6299d7; later commits are packaging/evidence only).
+# Until published, local Arena runs may use `dir: ../omega-checker` from the
+# arena checkout instead of cloning `url`.
+url: https://github.com/wazdogz/omega-checker
 ref: omega
-rev: f6299d79a05c7390d2322161581e851a281cf48a
+rev: RELEASE_COMMIT_PLACEHOLDER
 build: |
   cat > config.json <<__END__
    {

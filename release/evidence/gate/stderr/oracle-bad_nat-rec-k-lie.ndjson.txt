@@ -1,0 +1,5 @@
+uncaught exception: while replaying declaration 'k1':
+(kernel) declaration type mismatch, 'k1' has type
+  Nat → True
+but it is expected to have type
+  (n : Nat) → g n

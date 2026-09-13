@@ -1,7 +1,10 @@
 # About
 
 This is a fork of [sokonanoda](https://github.com/intgrah/sokonanoda)
-(Apache-2.0). Changes in this fork:
+(Apache-2.0). See `NOTICE.md` for full attribution (sokonanoda lineage,
+mathgraph wide-frame port). Release evidence: `RELEASE_MANIFEST.md`.
+
+Changes in this fork:
 
 - Exact environment pruning past 64 loose bound variables ("wide framed
   environments"), ported commit-by-commit with original authorship from
@@ -25,6 +28,8 @@ It is essentially a testing bed for high-performance typechecking for Lean.
 
 You shouldn't use this for serious purposes.
 
-Currently, it is about 9x faster than the official kernel, measured on mathlib.
+On Mathlib, OBSERVED ARM instruction counts for this fork vs the official
+kernel are in `release/evidence/measurements/` and `REPORT.md`. Arena x86
+ranking is **not** claimed until remeasured on the Arena runner.
 
 Basically, the core conversion algorithm is entirely replaced by something closure-based. There are also some non-theoretical, purely programming optimisations.

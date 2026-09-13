@@ -1,0 +1,7 @@
+uncaught exception: while replaying declaration 'accRecNoEta':
+(kernel) declaration type mismatch, 'accRecNoEta' has type
+  (α : Type) → (r : α → α → Prop) → (a : α) → @Acc α r a → (p : Bool) → @Eq Bool p p
+but it is expected to have type
+  {α : Type} →
+    (r : α → α → Prop) →
+      (a : α) → (h : @Acc α r a) → (p : Bool) → @Eq Bool (@Acc.rec α r (fun x x_1 => Bool) (fun x x_1 x_2 => p) a h) p

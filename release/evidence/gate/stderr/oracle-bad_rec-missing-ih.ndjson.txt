@@ -1,0 +1,2 @@
+uncaught exception: while replaying declaration 'Native64TwoHashOwner':
+(kernel) arg #3 of 'Native64TwoHashOwner.step' contains a non valid occurrence of the datatypes being declared

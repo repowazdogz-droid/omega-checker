@@ -1,0 +1,7 @@
+uncaught exception: while replaying declaration 'badFalse':
+(kernel) application type mismatch
+  Wrapper.mk True.intro
+argument has type
+  True
+but function has type
+  False → Wrapper

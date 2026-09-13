@@ -1,0 +1,4 @@
+
+thread 'main' (1920530) panicked at src/parser.rs:1333:9:
+assertion failed: self.declars.insert(name, d).is_none()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

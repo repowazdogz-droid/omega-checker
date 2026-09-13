@@ -1,0 +1,7 @@
+
+thread 'thread_0' (1918632) panicked at src/infer.rs:167:21:
+let def_eq failed
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'main' (1918622) panicked at src/tc.rs:213:26:
+A thread in `check_all_declars` panicked while being joined: Any { .. }

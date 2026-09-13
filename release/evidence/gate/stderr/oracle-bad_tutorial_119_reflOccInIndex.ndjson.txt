@@ -1,0 +1,7 @@
+uncaught exception: while replaying declaration 'reflOccInIndex':
+(kernel) application type mismatch
+  reflOccInIndex x
+argument has type
+  Nat
+but function has type
+  Type → Type

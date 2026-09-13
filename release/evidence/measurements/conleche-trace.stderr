@@ -1,0 +1,24 @@
+trace: #9942 `_private.ConLeche.Verify.Deep.0.ConLeche.defeqLoop_shift` 0.710s session_alloc=1023MB (+1023MB)
+trace: #12436 `ConLeche.Cached.checkIotaThmNS_sim` 0.650s session_alloc=511MB (+509MB)
+trace: #11988 `ConLeche.checkIotaThmN_datF` 2.423s session_alloc=2047MB (+2047MB)
+trace: #12447 `ConLeche.checkIotaThmNF_eq` 2.889s session_alloc=1023MB (+1023MB)
+trace: #12567 `ConLeche.checkIotaThm_inv` 12.996s session_alloc=8191MB (+8191MB)
+trace: #12631 `ConLeche.checkIotaThmN_inv` 88.467s session_alloc=32767MB (+32767MB)
+       92.49 real       103.97 user        10.43 sys
+         27070758912  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+             3446312  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  17  voluntary context switches
+               56397  involuntary context switches
+        593406859734  instructions retired
+        289592749461  cycles elapsed
+         32640400512  peak memory footprint

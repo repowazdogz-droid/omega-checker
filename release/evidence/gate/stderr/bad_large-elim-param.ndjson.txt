@@ -1,0 +1,9 @@
+
+thread 'thread_0' (1918641) panicked at src/expr.rs:390:9:
+assertion `left == right` failed
+  left: 2
+ right: 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'main' (1918627) panicked at src/tc.rs:213:26:
+A thread in `check_all_declars` panicked while being joined: Any { .. }

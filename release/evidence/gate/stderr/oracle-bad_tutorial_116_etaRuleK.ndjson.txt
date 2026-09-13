@@ -1,0 +1,7 @@
+uncaught exception: while replaying declaration 'etaRuleK':
+(kernel) declaration type mismatch, 'etaRuleK' has type
+  (a : @Eq Bool Bool.true Bool.true → Bool) → @Eq (@Eq Bool Bool.true Bool.true → Bool) a a
+but it is expected to have type
+  (a : @Eq Bool Bool.true Bool.true → Bool) →
+    @Eq (@Eq Bool Bool.true Bool.true → Bool)
+      (@Eq.rec Bool Bool.true (fun x x_1 => Bool) (a (@Eq.refl Bool Bool.true)) Bool.true) a

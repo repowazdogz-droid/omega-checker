@@ -1,0 +1,6 @@
+uncaught exception: while replaying declaration 'ruleKbad':
+(kernel) declaration type mismatch, 'ruleKbad' has type
+  @Eq Bool Bool.true Bool.false → (a : Bool) → @Eq Bool a a
+but it is expected to have type
+  (h : @Eq Bool Bool.true Bool.false) →
+    (a : Bool) → @Eq Bool (@Eq.rec Bool Bool.true (fun x x_1 => Bool) a Bool.false h) a

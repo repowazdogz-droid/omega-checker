@@ -1,0 +1,5 @@
+uncaught exception: while replaying declaration 'etaCtor':
+(kernel) declaration type mismatch, 'etaCtor' has type
+  (x : True → T) → @Eq (True → T) x x
+but it is expected to have type
+  (x : True → T) → @Eq (True → T) (T.mk (T.val (x True.intro))) x

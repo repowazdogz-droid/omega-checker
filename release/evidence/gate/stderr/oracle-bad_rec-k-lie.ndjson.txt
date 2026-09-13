@@ -1,0 +1,5 @@
+uncaught exception: while replaying declaration 'bad':
+(kernel) declaration type mismatch, 'bad' has type
+  True
+but it is expected to have type
+  disc MyBool.true

@@ -1,0 +1,3 @@
+uncaught exception: while replaying declaration 'bad':
+(kernel) invalid projection
+  (Bad.mk2 True.intro).1

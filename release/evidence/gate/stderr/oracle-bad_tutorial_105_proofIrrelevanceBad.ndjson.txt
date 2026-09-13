@@ -1,0 +1,5 @@
+uncaught exception: while replaying declaration 'proofIrrelevanceBad':
+(kernel) declaration type mismatch, 'proofIrrelevanceBad' has type
+  (p : Type) → (h1 : p) → p → @Eq p h1 h1
+but it is expected to have type
+  (p : Type) → (h1 h2 : p) → @Eq p h1 h2

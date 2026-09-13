@@ -1,0 +1,5 @@
+uncaught exception: while replaying declaration 'badDef':
+(kernel) declaration type mismatch, 'badDef' has type
+  Type 1
+but it is expected to have type
+  Prop
