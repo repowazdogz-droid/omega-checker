@@ -4,6 +4,9 @@ description: |
   preserved, from [mathgraph](https://github.com/metalogiclabs/mathgraph-lean-kernel)),
   and a rejection path that always names the failing declaration.
   Apache-2.0. See NOTICE.md and RELEASE_MANIFEST.md.
+# NOTE (2026-09-25): historical. The repository is public and the Arena proposal
+# (lean-kernel-arena #196) was withdrawn; see RELEASE_MANIFEST.md. Original pre-publication
+# notes follow.
 # Pre-publish URL strategy (repository not yet on GitHub):
 #   1. Push branch `omega` to https://github.com/repowazdogz-droid/omega-checker
 #      (or the chosen public owner/name documented in RELEASE_MANIFEST.md).
