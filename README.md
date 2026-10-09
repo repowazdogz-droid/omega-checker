@@ -1,4 +1,14 @@
-# About
+# omega-checker
+
+A Lean 4 kernel checker forked from sokonanoda, with exact environment pruning past 64
+loose bound variables. At semantic commit `f6299d7` it returned the same verdict as the
+official Lean kernel (v4.34.0-rc2) on all 192 Lean Kernel Arena tarball tests, in a local
+run recorded under `release/evidence/gate/`. Upstream sokonanoda has since fixed the same
+failure class itself and performed better on the author's measured workloads, so the
+proposed Arena entry (lean-kernel-arena #196) was withdrawn and no Arena ranking is
+claimed. Supported and unverified claims are listed separately in `RELEASE_MANIFEST.md`.
+
+## About this fork
 
 This is a fork of [sokonanoda](https://github.com/intgrah/sokonanoda)
 (Apache-2.0). See `NOTICE.md` for full attribution (sokonanoda lineage,
