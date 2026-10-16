@@ -7,7 +7,17 @@ use stumpalo::Arena;
 
 const MAX_EXPORT_BYTES: u64 = 64 * 1024 * 1024;
 
-fn arena_root() -> Option<PathBuf> { std::env::var_os("LEAN_KERNEL_ARENA").map(PathBuf::from) }
+/// Resolve the arena checkout from `LEAN_KERNEL_ARENA`. A missing or empty value is an
+/// error, not a skip: a test that returns early reports `ok`, which is indistinguishable
+/// from 192 cases agreeing with the official kernel.
+fn require_arena_root(var: Option<std::ffi::OsString>) -> Result<PathBuf, String> {
+    match var {
+        Some(v) if !v.is_empty() => Ok(PathBuf::from(v)),
+        _ => Err("LEAN_KERNEL_ARENA is not set: no arena case ran, so this test cannot pass. \
+                  Point it at a lean-kernel-arena checkout with _build/tests populated."
+            .to_string()),
+    }
+}
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 enum ExpectedOutcome {
@@ -109,10 +119,7 @@ fn run_case_inner(export: PathBuf) -> Outcome {
 
 #[test]
 fn arena_fast_tier() {
-    let Some(root) = arena_root() else {
-        eprintln!("arena_fast_tier: LEAN_KERNEL_ARENA is not set; skipping");
-        return;
-    };
+    let root = require_arena_root(std::env::var_os("LEAN_KERNEL_ARENA")).unwrap_or_else(|e| panic!("{e}"));
     let mut cases = Vec::new();
     collect_cases(&root, &mut cases);
     cases.sort();
@@ -150,4 +157,12 @@ fn arena_fast_tier() {
     if !failures.is_empty() {
         panic!("{}/{} arena cases mismatched:\n{}", failures.len(), cases.len(), failures.join("\n"));
     }
+}
+
+#[test]
+fn missing_arena_input_is_a_failure() {
+    assert!(require_arena_root(None).is_err(), "unset LEAN_KERNEL_ARENA must be an error");
+    assert!(require_arena_root(Some("".into())).is_err(), "empty LEAN_KERNEL_ARENA must be an error");
+    // Positive control: a set value resolves, so the check is not red on everything.
+    assert_eq!(require_arena_root(Some("/arena".into())).unwrap(), PathBuf::from("/arena"));
 }
