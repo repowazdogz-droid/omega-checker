@@ -1,0 +1,30 @@
+name: ci
+
+# Unit tests plus the arena fast tier against the pinned Lean Kernel Arena tarball
+# (round-2026-09, sha256-checked in scripts/fetch-arena-fixture.sh). tests/arena.rs fails
+# when LEAN_KERNEL_ARENA is unset, so this job cannot pass without running the arena cases.
+on:
+  push:
+    branches: [omega]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Fetch the arena fixture
+        run: scripts/fetch-arena-fixture.sh "$RUNNER_TEMP/arena"
+      - name: cargo test
+        env:
+          LEAN_KERNEL_ARENA: ${{ runner.temp }}/arena
+        run: cargo test --no-fail-fast
